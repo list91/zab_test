@@ -1,0 +1,145 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    width: 100%;
+    height: 100%;
+}
+
+header {
+    /* background-color: #333; */
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    border: 2px solid #33333333;
+}
+header nav {
+    display: inline-flex;
+}
+
+.header_info{
+    width: fit-content;
+}
+.header_menu{
+    display: flex;
+    align-items: center;
+}
+.header_menu .nav_button{
+    margin-right: 10px;
+    padding: 2px;
+}
+
+.nav_container nav {
+    margin-top: 35px;
+}
+
+.button_a{
+    padding: 5px;
+    text-decoration: none;
+    text-align: center;
+    font-size: 18px;
+    /* color: white; */
+    display: block;
+    text-transform: uppercase;
+    color: black;
+}
+
+
+.main-content {
+    padding: 20px;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.nav_container {
+    background-color: #e96b6b;
+    width: 200px;
+    padding: 4px;
+}
+
+.header_and_maincontent_container {
+    flex: 1;
+    height: 100%;
+}
+
+img {
+    max-width: 100%;
+    height: ato;
+    display: block;
+    margin: auto;
+}
+
+.nav_button{
+    background-color: #FFCF34;
+    border: 2px solid #333;
+    border-radius: 15px;
+    margin-top: 8px;
+}
+
+.nav_settings {
+    height: 100px;
+    position: relative; /* Добавляем относительное позиционирование */
+}
+
+.nav_settings .nav_button {
+    position: absolute; /* Добавляем абсолютное позиционирование */
+    bottom: 0; /* Прижимаем к низу */
+    width: 100%; /* Занимаем всю ширину */
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.nav_container {
+    background-color: #ffffff;
+    width: 20%;
+    padding: 4px;
+    display: flex;
+    flex-direction: column; /* Располагаем дочерние элементы в столбец */
+    border: 2px solid #33333333;
+}
+
+.nav_settings {
+    flex-grow: 1; /* Растягиваем на всю доступную высоту */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+
+.logo_container{
+    background-color: #ffffff;
+}
+.info_descr{
+    padding: 5px;
+    text-decoration: none;
+    /* text-align: center; */
+    font-size: 12px;
+    /* color: white; */
+    display: flex;
+    /* text-transform: uppercase; */
+    color: black;
+}
+.info_descr .descr_title{
+    margin-right: 5px;
+    font-size: 16px;
+}
+.descr_item{
+    text-transform: none;
+}
