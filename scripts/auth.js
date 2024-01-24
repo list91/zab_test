@@ -48,8 +48,8 @@ export default class Auth {
             output: "extend",
             history: 0,
             itemids: "46399",  // Замените на фактический идентификатор элемента данных
-            time_from: "1705401697",
-            time_till: "1705402538",
+            // time_from: "1705401697",
+            // time_till: "1705402538",
             // sortfield: "none", // Указываем "none" для отсутствия сортировки
             sortorder: "ASC"
             // host: host,
