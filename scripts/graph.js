@@ -100,7 +100,6 @@ export default class Graph {
         clearInterval(this.UPDATE_TASK_ID);
     }
     run_display_graph(){
-
         this.UPDATE_TASK_ID = setInterval(
             this.update_display_graph(this.CLASS_NAME),
             this.UPDATE_INTERVAL
@@ -109,9 +108,9 @@ export default class Graph {
     update_display_graph(){
         
         // тут получили массив с ЗАББИКСА 
-        // с неограниченной выборкой точек
+        // с N-ой выборкой точек
         // this.ARRAY_LONG;
-
+        
         var series_list = []
         var labels_list = []
 
@@ -120,9 +119,9 @@ export default class Graph {
             labels_list.push(this.ARRAY_LONG[index]["clock"]);
         }
         var data = {
-        labels: this.get_datatime_list(this.processTableData(labels_list)),
-        series: [this.processTableData(series_list)]
-    }
+            labels: this.get_datatime_list(this.processTableData(labels_list)),
+            series: [this.processTableData(series_list)]
+        }
         console.log(data)
         new Chartist.Line("."+this.CLASS_NAME, data);
     }

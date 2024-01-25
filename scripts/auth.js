@@ -28,6 +28,7 @@ export default class Auth {
         this.request.send(JSON.stringify(data));
       
         if (this.request.status === 200) {
+          // alert(this.request.responseText);
           return JSON.parse(this.request.responseText);
         } else {
           throw new Error(`HTTP error! Status: ${this.request.status}`);
@@ -63,10 +64,12 @@ export default class Auth {
       getItemsTimeInterval(id, timeFrom, timeTill) {
         // число0 месяц1 год2  час3 минута4 скунда5
         // ['15', '2', '2024', '13', '11', '21']
-        const startDate = new Date(timeFrom[2] + '-'+timeFrom[1]+'-'+timeFrom[0]+'T'+timeFrom[3]+':'+timeFrom[4]+':'+timeFrom[5]+'Z'); // Устанавливаем начальную дату
-        const endDate = new Date(timeTill[2] + '-'+timeTill[1]+'-'+timeTill[0]+'T'+timeTill[3]+':'+timeTill[4]+':'+timeTill[5]+'Z');   // Устанавливаем конечную дату
+        const startDate = new Date(timeFrom[2] + '-'+timeFrom[1]+'-'+timeFrom[0]+'T'+timeFrom[3]+':'+timeFrom[4]+':'+timeFrom[5]+'Z');
+        const endDate = new Date(timeTill[2] + '-'+timeTill[1]+'-'+timeTill[0]+'T'+timeTill[3]+':'+timeTill[4]+':'+timeTill[5]+'Z');
         // const endDate = new Date('2023-01-10T00:00:00Z');   // Устанавливаем конечную дату
 
+        // console.log(startDate);
+        console.log(endDate);
         const timeFromFormat = Math.floor(startDate.getTime() / 1000);
         const timeTillFormat = Math.floor(endDate.getTime() / 1000);
         
@@ -77,15 +80,17 @@ export default class Auth {
             output: "extend",
             history: 0,
             itemids: id,
-            time_from: timeFromFormat,
-            time_till: timeTillFormat,
+            // time_from: timeTillFormat,
+            // time_till: timeFromFormat,
+            time_from: timeFromFormat-25200,
+            time_till: timeTillFormat-25200,
             sortorder: "ASC"
           },
           auth: this.API,
           id: 1,
         };
       
-        // console.log(requestData);
+        
         try {
           const zabbixData = this.getData('http://192.168.0.160/zabbix/api_jsonrpc.php', requestData);
           console.log(zabbixData);
@@ -94,6 +99,7 @@ export default class Auth {
             return zabbixData.result;  
           } else {
             console.log('No data found.');
+            console.log(requestData);
           }
         } catch (error) {
           console.error('Error:', error.message);
@@ -130,23 +136,21 @@ export default class Auth {
           console.error(`HTTP error! Status: ${this.request.status}`);
         }
       }
-      getAllItems(apiKey, itemids) {
-const requestData = {
-  jsonrpc: '2.0',
-  method: "history.get",
-  params: {
-    output: "extend",
-    history: 0,
-    itemids: itemids,
-    // time_from: timeFromFormat,
-    // time_till: timeTillFormat,
-    sortorder: "ASC"
-  },
-  auth: this.API,
-  id: 1,
-};
+
+      getAllItems(itemids) {
+        const requestData = {
+          jsonrpc: '2.0',
+          method: "history.get",
+          params: {
+            output: "extend",
+            history: 0,
+            itemids: itemids,
+            sortorder: "ASC"
+          },
+          auth: this.API,
+          id: 1,
+        };
       
-        // console.log(requestData);
         try {
           const zabbixData = this.getData('http://192.168.0.160/zabbix/api_jsonrpc.php', requestData);
           // console.log(zabbixData);
