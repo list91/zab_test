@@ -2,6 +2,7 @@ export default class Graph {
     constructor(arr, interval) {
         // this.IS_RUNNING = false;
         this.UPDATE_INTERVAL = interval;
+        console.log(arr);
         this.ARRAY_LONG = arr;
         this.create_graph_block();
     }
@@ -17,7 +18,7 @@ export default class Graph {
         return result;
     }
     create_graph_block(){
-        let graph_block = document.createElement("div");
+        this.GRAPH_DIV = document.createElement("div");
         
         while(1){
             let class_name = this.generate_class_name();
@@ -67,8 +68,8 @@ export default class Graph {
         img_wdg.width = 100;
 
         
-        graph_block.appendChild(header_graph_block);
-        graph_block.appendChild(graph);
+        this.GRAPH_DIV.appendChild(header_graph_block);
+        this.GRAPH_DIV.appendChild(graph);
 
         header_graph_block.appendChild(header_graph_block__title);
         header_graph_block.appendChild(header_graph_block__buttons_block);
@@ -86,7 +87,7 @@ export default class Graph {
 
 
 
-        document.getElementById("graph_container").appendChild(graph_block);
+        document.getElementById("graph_container").appendChild(this.GRAPH_DIV);
     }
     get_datatime_list(list){
         let new_list = []
@@ -123,7 +124,6 @@ export default class Graph {
         series: [this.processTableData(series_list)]
     }
         console.log(data)
-        // new Chartist.Line('.ct-chart-1', data);
         new Chartist.Line("."+this.CLASS_NAME, data);
     }
     processTableData(tableData) {
