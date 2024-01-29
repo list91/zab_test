@@ -1,10 +1,9 @@
-export default class Table {
-    // задача: сделать родительский класс для классов наследников Table и Graph
-    constructor(zabClass, item) {
+import DataInterface from "./data_interface.js";
+export default class Table extends DataInterface {
+    constructor(auth, item){
+        super(auth, item);
         this.ID_ITEM = item.ID;
         this.TYPE = item.TYPE;
-        this.ZABB_AUTH = zabClass;
-        console.log(this.TYPE);
         this.initArr();
         this.create_table_block();
     }
@@ -16,10 +15,10 @@ export default class Table {
         }
     }
     initArr(){
-        const arr = this.ZABB_AUTH.getItemsTypeTimeInterval(
+        const arr = this.AUTH.getItemsTypeTimeInterval(
             this.ID_ITEM,
-            this.ZABB_AUTH.getSubtractDates(new Date, [0, 0, 0, 1, 0, 0]),
-            this.ZABB_AUTH.getCurrentDate(new Date),
+            this.AUTH.getSubtractDates(new Date, [0, 0, 0, 1, 0, 0]),
+            this.AUTH.getCurrentDate(new Date),
             this.TYPE
         )
         let theader = this.getFormatTypeList("время", "значение", "измененние");

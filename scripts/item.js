@@ -9,13 +9,9 @@ export default class Item {
         this.TYPE = type;
         this.KEY = key;
         this.createNewLiBlockForDocument();
-
-        // console.log(this.NAME+" - "+this.TYPE);
-
     }
 
     initGraph(){
-        // console.log(this.ID);
         const graph = new Graph(this.AUTH, this.ID);
         graph.run_display_graph(1000);
     }
