@@ -1,4 +1,5 @@
 import Graph from "./graph.js";
+import Table from "./table.js";
 
 export default class Item {
     constructor(name, id, type, key, auth) {
@@ -61,6 +62,26 @@ export default class Item {
         button_table_link.textContent = "таблица";
         button_table_link.classList.add("button_a");
         button_table_link.href = "#"
+        button_table_link.addEventListener("click",()=>{
+            let className = "main-content";
+            this.clearFirstBlockByClass(className);
+            new Table(this.AUTH, this)
+            //     console.log(this.AUTH.getItemsTypeTimeInterval(
+        //         this.ID,
+        //         this.AUTH.getSubtractDates(new Date, [0, 0, 0, 1, 0, 0]),
+        //         this.AUTH.getCurrentDate(new Date),
+        //         this.TYPE
+        // ));
+            // let className = "main-content";
+            // this.clearFirstBlockByClass(className);
+            // let block = document.createElement("div")
+            // block.id = "graphs";
+            // document.getElementsByClassName(className)[0].appendChild(block);
+            // let blockGraph = document.createElement("div")
+            // blockGraph.id = "graph_container";
+            // document.getElementsByClassName(className)[0].appendChild(blockGraph);
+            // this.initGraph();
+        });
 
 
         button_graph.appendChild(button_graph_link);

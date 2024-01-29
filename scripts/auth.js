@@ -64,17 +64,10 @@ export default class Auth {
     }
         
       getItemsTimeInterval(id, timeFrom, timeTill) {
-        // число0 месяц1 год2  час3 минута4 скунда5
-        // ['15', '2', '2024', '13', '11', '21']
         const startDate = new Date(timeFrom[2] + '-'+timeFrom[1]+'-'+timeFrom[0]+'T'+timeFrom[3]+':'+timeFrom[4]+':'+timeFrom[5]+'Z');
         const endDate = new Date(timeTill[2] + '-'+timeTill[1]+'-'+timeTill[0]+'T'+timeTill[3]+':'+timeTill[4]+':'+timeTill[5]+'Z');
-        // const endDate = new Date('2023-01-10T00:00:00Z');   // Устанавливаем конечную дату
-
-        // console.log(startDate);
-        // console.log(endDate);
         const timeFromFormat = Math.floor(startDate.getTime() / 1000);
-        const timeTillFormat = Math.floor(endDate.getTime() / 1000);
-        
+        const timeTillFormat = Math.floor(endDate.getTime() / 1000);        
         const requestData = {
           jsonrpc: '2.0',
           method: "history.get",
@@ -89,18 +82,43 @@ export default class Auth {
           auth: this.API,
           id: 1,
         };
-      
-        // console.log(requestData);
-        
         try {
           const zabbixData = this.getData('http://192.168.0.160/zabbix/api_jsonrpc.php', requestData);
-          // console.log(zabbixData);
           if (zabbixData.result && zabbixData.result.length > 0) {
-            // console.log(zabbixData);
             return zabbixData.result;
           } else {
             console.log('No data found.');
-            console.log(requestData);
+          }
+        } catch (error) {
+          console.error('Error:', error.message);
+        }
+      }
+      getItemsTypeTimeInterval(id, timeFrom, timeTill, type) {
+        const startDate = new Date(timeFrom[2] + '-'+timeFrom[1]+'-'+timeFrom[0]+'T'+timeFrom[3]+':'+timeFrom[4]+':'+timeFrom[5]+'Z');
+        const endDate = new Date(timeTill[2] + '-'+timeTill[1]+'-'+timeTill[0]+'T'+timeTill[3]+':'+timeTill[4]+':'+timeTill[5]+'Z');
+        const timeFromFormat = Math.floor(startDate.getTime() / 1000);
+        const timeTillFormat = Math.floor(endDate.getTime() / 1000);        
+        const requestData = {
+          jsonrpc: '2.0',
+          method: "history.get",
+          params: {
+            output: "extend",
+            history: parseInt(type, 10),
+            itemids: id,
+            time_from: timeFromFormat-25200,
+            time_till: timeTillFormat-25200,
+            sortorder: "ASC"
+          },
+          auth: this.API,
+          id: 1,
+        };
+        // console.log(requestData);
+        try {
+          const zabbixData = this.getData('http://192.168.0.160/zabbix/api_jsonrpc.php', requestData);
+          if (zabbixData.result && zabbixData.result.length > 0) {
+            return zabbixData.result;
+          } else {
+            console.log('No data found.');
           }
         } catch (error) {
           console.error('Error:', error.message);

@@ -52,9 +52,6 @@ export default class Graph {
         let btn_conf_menu = document.createElement("div");
         btn_conf_menu.classList.add("btn_conf_menu");
         btn_conf_menu.textContent = "приветekjrrejtirjeiotjrieojtiorejtoijreotjorektpoertoijreiotjieojtwoipejrwitjreijfirojoif"
-        // btn_conf_menu.style.width = "100px";
-        // btn_conf_menu.style.height = "100px";
-        // btn_conf_menu.style.backgroundColor = "#000";
         btn_conf.addEventListener("click", function() {
 
         });
