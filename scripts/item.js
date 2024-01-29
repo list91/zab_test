@@ -68,6 +68,8 @@ export default class Item {
         
         if(this.TYPE == "0"){
             buttons_block.appendChild(button_graph);
+        } else{
+            // console.log(this.NAME+" - "+this.TYPE);
         }
         
         buttons_block.appendChild(button_table);

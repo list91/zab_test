@@ -26,6 +26,8 @@ export default class Auth {
         this.request.open('POST', url, false); // false указывает на синхронный режим
         this.request.setRequestHeader('Content-Type', 'application/json');
         this.request.send(JSON.stringify(data));
+        // console.log(this.request);
+        // console.log(this.request.responseText);
       
         if (this.request.status === 200) {
           // alert(this.request.responseText);
@@ -88,6 +90,7 @@ export default class Auth {
           id: 1,
         };
       
+        // console.log(requestData);
         
         try {
           const zabbixData = this.getData('http://192.168.0.160/zabbix/api_jsonrpc.php', requestData);
@@ -153,7 +156,7 @@ export default class Auth {
           const zabbixData = this.getData(this.URL, requestData);
           // console.log(zabbixData);
           if (zabbixData.result && zabbixData.result.length > 0) {
-            console.log(zabbixData);
+            // console.log(zabbixData);
             return zabbixData.result;  
           } else {
             console.log('No data found.');
@@ -180,7 +183,6 @@ export default class Auth {
     };
     // console.log(this.getData(this.URL, requestData));
     const data = this.getData(this.URL, requestData);
-    
     return this.getItemsByHostId(data.result[0].hostid)
     
 }
@@ -200,23 +202,6 @@ getItemsByHostId(hostId) {
   const data = this.getData(this.URL, requestData);
   // console.log(data);
   return data.result;
-  // console.log(data);
-  // this.request.open('POST', apiUrl, true);
-  // this.request.setRequestHeader('Content-Type', 'application/json');
-
-  // this.request.onreadystatechange = function () {
-  //     if (this.request.readyState === 4 && this.request.status === 200) {
-  //         const response = JSON.parse(this.request.responseText);
-  //         if (response.result && response.result.length > 0) {
-  //             // Обработка полученных элементов (items)
-  //             console.log('Items:', response.result);
-  //         } else {
-  //             console.error('No items found for the host.');
-  //         }
-  //     }
-  // };
-
-  // this.request.send(JSON.stringify(requestData));
 }
   
   }

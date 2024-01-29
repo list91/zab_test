@@ -142,10 +142,7 @@ export default class Graph {
             series_list.push(this.ARRAY_LONG[index]["value"]);
             labels_list.push(this.ARRAY_LONG[index]["clock"]);
         }
-        // var data = {
-        //     labels: this.get_datatime_list(this.processTableData(labels_list)),
-        //     series: [this.processTableData(series_list)]
-        // }
+
         var data = {
             labels: labels_list,
             series: [series_list]
