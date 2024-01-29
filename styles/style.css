@@ -13,6 +13,7 @@ header {
     display: flex;
     justify-content: space-between;
     border: 2px solid #33333333;
+    /* position: fixed; */
 }
 header nav {
     display: inline-flex;
@@ -46,9 +47,9 @@ header nav {
 }
 
 
-.main-content {
-    padding: 20px;
-}
+/* .main-content {
+    padding: 0 0;
+} */
 
 footer {
     background-color: #333;
@@ -87,8 +88,18 @@ img {
     background-color: #FFCF34;
     border: 2px solid #333;
     border-radius: 15px;
-    margin-top: 8px;
+    margin: 8px;
 }
+.nav_button:active {
+    background-color: #476e3b;
+}
+.close_btn:not(.active) {
+    background-color: #11131185;
+}
+/* .zebra_list li:focus > .nav_button:active {
+    background-color: #cc0f0f;
+  } */
+
 
 .nav_settings {
     height: 100px;
@@ -145,7 +156,7 @@ img {
     height: 300px;
 }
 .graph {
-    width: 400px;
+    width: 1200px;
     height: 400px;
 }
 /* .graphs {
@@ -178,3 +189,58 @@ img {
 .header_graph_block__title{
     text-transform: uppercase;
 }
+
+.btn_conf_menu{
+    position: absolute;
+    margin-left: 35px;
+    transform: translateX(-100%);
+    margin-top: 25px;
+    /* width: 300px; */
+    /* height: 100px; */
+    background-color: #54d366;
+    padding: 15px;
+}
+/* .close_btn{
+    background-color: #968651;
+    cursor: none;
+} */
+
+.zebra_list {
+    list-style: none;
+    /* border-left: 10px solid #FC7574; */
+    padding: 0;
+    margin: 0;
+    /* font-family: "Lucida Sans"; */
+  }
+  .zebra_list li {
+    padding: 10px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e1e1e1;
+}
+.zebra_list li:nth-child(odd):not(.active) {background: #D9D9D9;}
+.zebra_list li:nth-child(even):not(.active) {background: white;}
+/* .zebra_list li:nth-child(odd):active {background: red;}
+.zebra_list li:nth-child(even):active {background: red;} */
+
+  .item_button_graph{
+    margin-right: 30px;
+  }
+
+  .zebra_list_item_buttons{
+    display: flex;
+  }
+  .zebra_list_item_buttons .nav_button {
+    margin-right: 30px;
+  }
+  /* .zebra_list_item:active {
+    background-color: #cc0f0f;
+  } */
+  .zebra_list li:nth-child(odd):active:has(.nav_button:active) {
+    background-color: #aec3bc;
+  }
+  .zebra_list li:nth-child(even):active:has(.nav_button:active) {
+    background-color: #aec3bc;
+  }
+  

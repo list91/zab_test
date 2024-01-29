@@ -1,9 +1,7 @@
 export default class Graph {
-    constructor(arr, interval) {
-        // this.IS_RUNNING = false;
-        this.UPDATE_INTERVAL = interval;
-        console.log(arr);
-        this.ARRAY_LONG = arr;
+    constructor(zabClass, id) {
+        this.ID_ZAB_ITEM = id;
+        this.ZABB_AUTH = zabClass;
         this.create_graph_block();
     }
     generate_class_name() {
@@ -51,6 +49,16 @@ export default class Graph {
         
         let btn_conf = document.createElement("button");
         btn_conf.classList.add("btn_conf");
+        let btn_conf_menu = document.createElement("div");
+        btn_conf_menu.classList.add("btn_conf_menu");
+        btn_conf_menu.textContent = "приветekjrrejtirjeiotjrieojtiorejtoijreotjorektpoertoijreiotjieojtwoipejrwitjreijfirojoif"
+        // btn_conf_menu.style.width = "100px";
+        // btn_conf_menu.style.height = "100px";
+        // btn_conf_menu.style.backgroundColor = "#000";
+        btn_conf.addEventListener("click", function() {
+
+        });
+        
 
         let btn_wdg = document.createElement("button");
         btn_wdg.classList.add("btn_wdg");
@@ -67,13 +75,13 @@ export default class Graph {
         img_wdg.height = 100;
         img_wdg.width = 100;
 
-        
         this.GRAPH_DIV.appendChild(header_graph_block);
         this.GRAPH_DIV.appendChild(graph);
 
         header_graph_block.appendChild(header_graph_block__title);
-        header_graph_block.appendChild(header_graph_block__buttons_block);
+        // header_graph_block.appendChild(header_graph_block__buttons_block);
 
+        header_graph_block__buttons_block.appendChild(btn_conf_menu);
         header_graph_block__buttons_block.appendChild(header_graph_block__buttons_block__btn_conf);
         header_graph_block__buttons_block.appendChild(header_graph_block__buttons_block__btn_wdg);
 
@@ -82,11 +90,6 @@ export default class Graph {
 
         header_graph_block__buttons_block__btn_wdg.appendChild(btn_wdg);
         btn_wdg.appendChild(img_wdg);
-
-        
-
-
-
         document.getElementById("graph_container").appendChild(this.GRAPH_DIV);
     }
     get_datatime_list(list){
@@ -99,18 +102,39 @@ export default class Graph {
     cancel_runprocess(){
         clearInterval(this.UPDATE_TASK_ID);
     }
-    run_display_graph(){
+    run_display_graph(interval){
+        // this.UPDATE_INTERVAL = interval;
+        // this.update_display_graph(this.CLASS_NAME)
         this.UPDATE_TASK_ID = setInterval(
-            this.update_display_graph(this.CLASS_NAME),
-            this.UPDATE_INTERVAL
+            ()=>{
+                this.update_display_graph(this.CLASS_NAME)
+            },
+            interval
         );
+        // this.UPDATE_TASK_ID = setInterval(
+        //     this.test,
+        //     interval
+        // );
     }
+
+
+    udate_array(){
+        console.log(this.ID_ZAB_ITEM);
+        this.ARRAY_LONG = this.ZABB_AUTH.getItemsTimeInterval(
+                            this.ID_ZAB_ITEM,
+                            this.ZABB_AUTH.getSubtractDates(new Date, [0, 0, 0, 1, 0, 0]),
+                            this.ZABB_AUTH.getCurrentDate(new Date)
+                    )
+    }
+
     update_display_graph(){
-        
+
+        this.udate_array();
+                
         // тут получили массив с ЗАББИКСА 
         // с N-ой выборкой точек
         // this.ARRAY_LONG;
-        
+
         var series_list = []
         var labels_list = []
 
@@ -118,11 +142,15 @@ export default class Graph {
             series_list.push(this.ARRAY_LONG[index]["value"]);
             labels_list.push(this.ARRAY_LONG[index]["clock"]);
         }
+        // var data = {
+        //     labels: this.get_datatime_list(this.processTableData(labels_list)),
+        //     series: [this.processTableData(series_list)]
+        // }
         var data = {
-            labels: this.get_datatime_list(this.processTableData(labels_list)),
-            series: [this.processTableData(series_list)]
+            labels: labels_list,
+            series: [series_list]
         }
-        console.log(data)
+        // console.log(data)
         new Chartist.Line("."+this.CLASS_NAME, data);
     }
     processTableData(tableData) {
@@ -130,7 +158,7 @@ export default class Graph {
           return [];
         }
 
-        const intermediatePointsCount = 4;
+        const intermediatePointsCount = 14;
 
         const dataPointsCount = tableData.length;
 

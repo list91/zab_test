@@ -69,7 +69,7 @@ export default class Auth {
         // const endDate = new Date('2023-01-10T00:00:00Z');   // Устанавливаем конечную дату
 
         // console.log(startDate);
-        console.log(endDate);
+        // console.log(endDate);
         const timeFromFormat = Math.floor(startDate.getTime() / 1000);
         const timeTillFormat = Math.floor(endDate.getTime() / 1000);
         
@@ -80,8 +80,6 @@ export default class Auth {
             output: "extend",
             history: 0,
             itemids: id,
-            // time_from: timeTillFormat,
-            // time_till: timeFromFormat,
             time_from: timeFromFormat-25200,
             time_till: timeTillFormat-25200,
             sortorder: "ASC"
@@ -93,10 +91,10 @@ export default class Auth {
         
         try {
           const zabbixData = this.getData('http://192.168.0.160/zabbix/api_jsonrpc.php', requestData);
-          console.log(zabbixData);
+          // console.log(zabbixData);
           if (zabbixData.result && zabbixData.result.length > 0) {
-            console.log(zabbixData);
-            return zabbixData.result;  
+            // console.log(zabbixData);
+            return zabbixData.result;
           } else {
             console.log('No data found.');
             console.log(requestData);
@@ -152,7 +150,7 @@ export default class Auth {
         };
       
         try {
-          const zabbixData = this.getData('http://192.168.0.160/zabbix/api_jsonrpc.php', requestData);
+          const zabbixData = this.getData(this.URL, requestData);
           // console.log(zabbixData);
           if (zabbixData.result && zabbixData.result.length > 0) {
             console.log(zabbixData);
@@ -164,6 +162,62 @@ export default class Auth {
           console.error('Error:', error.message);
         }
       }
+      
+    
+    getItemsByHostName(name) {
+    // Формируем данные запроса
+    const requestData = {
+        jsonrpc: '2.0',
+        method: 'host.get',
+        params: {
+            output: ['hostid', 'host'],
+            filter: {
+                host: [name]
+            }
+        },
+        auth: this.API,
+        id: 1
+    };
+    // console.log(this.getData(this.URL, requestData));
+    const data = this.getData(this.URL, requestData);
+    
+    return this.getItemsByHostId(data.result[0].hostid)
+    
+}
+getItemsByHostId(hostId) {
+  // Формируем данные запроса для получения элементов (items)
+  const requestData = {
+      jsonrpc: '2.0',
+      method: 'item.get',
+      params: {
+          output: "extend",
+          hostids: hostId
+      },
+      auth: this.API,
+      id: 1
+  };
+  // console.log(requestData);
+  const data = this.getData(this.URL, requestData);
+  // console.log(data);
+  return data.result;
+  // console.log(data);
+  // this.request.open('POST', apiUrl, true);
+  // this.request.setRequestHeader('Content-Type', 'application/json');
+
+  // this.request.onreadystatechange = function () {
+  //     if (this.request.readyState === 4 && this.request.status === 200) {
+  //         const response = JSON.parse(this.request.responseText);
+  //         if (response.result && response.result.length > 0) {
+  //             // Обработка полученных элементов (items)
+  //             console.log('Items:', response.result);
+  //         } else {
+  //             console.error('No items found for the host.');
+  //         }
+  //     }
+  // };
+
+  // this.request.send(JSON.stringify(requestData));
+}
   
   }
     
