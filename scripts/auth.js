@@ -63,9 +63,15 @@ export default class Auth {
       return this.getCurrentDate(resultDate);
     }
         
+    getStringFormatDate(list){
+      console.log(list);
+      return list[2] + '-'+list[1]+'-'+list[0]+'T'+list[3]+':'+list[4]+':'+list[5]+'Z';
+    }
       getItemsTimeInterval(id, timeFrom, timeTill) {
-        const startDate = new Date(timeFrom[2] + '-'+timeFrom[1]+'-'+timeFrom[0]+'T'+timeFrom[3]+':'+timeFrom[4]+':'+timeFrom[5]+'Z');
-        const endDate = new Date(timeTill[2] + '-'+timeTill[1]+'-'+timeTill[0]+'T'+timeTill[3]+':'+timeTill[4]+':'+timeTill[5]+'Z');
+        // console.log(timeFrom);
+        // console.log(timeTill);
+        const startDate = new Date(this.getStringFormatDate(timeFrom));
+        const endDate = new Date(this.getStringFormatDate(timeTill));
         const timeFromFormat = Math.floor(startDate.getTime() / 1000);
         const timeTillFormat = Math.floor(endDate.getTime() / 1000);        
         const requestData = {
@@ -94,6 +100,8 @@ export default class Auth {
         }
       }
       getItemsTypeTimeInterval(id, timeFrom, timeTill, type) {
+        console.log(timeFrom);
+        console.log(timeTill);
         const startDate = new Date(timeFrom[2] + '-'+timeFrom[1]+'-'+timeFrom[0]+'T'+timeFrom[3]+':'+timeFrom[4]+':'+timeFrom[5]+'Z');
         const endDate = new Date(timeTill[2] + '-'+timeTill[1]+'-'+timeTill[0]+'T'+timeTill[3]+':'+timeTill[4]+':'+timeTill[5]+'Z');
         const timeFromFormat = Math.floor(startDate.getTime() / 1000);

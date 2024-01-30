@@ -1,8 +1,9 @@
 import DataInterface from "./data_interface.js";
 export default class Graph extends DataInterface {
-    constructor(auth, item){
+    constructor(auth, item, from, to){
         super(auth, item);
         this.ID_ITEM = item.ID;
+        this.update_from_to(from, to)
         this.create_graph_block();
     }
     create_graph_block(){
@@ -77,7 +78,13 @@ export default class Graph extends DataInterface {
 
         header_graph_block__buttons_block__btn_wdg.appendChild(btn_wdg);
         btn_wdg.appendChild(img_wdg);
-        document.getElementById("graph_container").appendChild(this.GRAPH_DIV);
+        let gc = document.createElement("div");
+        gc.id = "graph_container";
+        gc.appendChild(this.GRAPH_DIV);
+        this.push_form_mainContent();
+        // alert(this.MAIN_CONTAINER);
+        this.MAIN_CONTAINER.appendChild(gc);
+
     }
 
     cancel_runprocess(){
@@ -91,30 +98,35 @@ export default class Graph extends DataInterface {
             interval
         );
     }
+    update_from_to(from, to){
+        this.from = from;
+        this.to = to;
+    }
 
 
     udate_array(){
-        this.ARRAY_LONG = this.AUTH.getItemsTimeInterval(
-                            this.ID_ITEM,
-                            this.AUTH.getSubtractDates(new Date, [0, 0, 0, 0, 1, 0]),
-                            this.AUTH.getCurrentDate(new Date)
-                    )
+        this.ARRAY_LONG = this.AUTH.getItemsTimeInterval(this.ID_ITEM, this.from, this.to);
+        // this.ARRAY_LONG = this.AUTH.getItemsTimeInterval(
+        //                     this.ID_ITEM,
+        //                     this.AUTH.getSubtractDates(new Date, [0, 0, 0, 0, 0, 10]),
+        //                     this.AUTH.getCurrentDate(new Date)
+        //             )
     }
 
     update_display_graph(){
 
         this.udate_array();
-                
-        // тут получили массив с ЗАББИКСА 
-        // с N-ой выборкой точек
-        // this.ARRAY_LONG;
 
         var series_list = []
         var labels_list = []
 
-        for (let index = 0; index < this.ARRAY_LONG.length; index++) {
-            series_list.push(this.ARRAY_LONG[index]["value"]);
-            labels_list.push(this.ARRAY_LONG[index]["clock"]);
+        console.log(this.ARRAY_LONG);
+
+        if (this.ARRAY_LONG) {
+            for (let index = 0; index < this.ARRAY_LONG.length; index++) {
+                series_list.push(this.ARRAY_LONG[index]["value"]);
+                labels_list.push(this.ARRAY_LONG[index]["clock"]);
+            }
         }
 
         var data = {

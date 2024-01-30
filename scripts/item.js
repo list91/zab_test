@@ -10,10 +10,28 @@ export default class Item {
         this.KEY = key;
         this.createNewLiBlockForDocument();
     }
-
+    initConfirmButton(){
+        this.CONFIRM_BUTTON = document.getElementById("submit");
+        this.CONFIRM_BUTTON.addEventListener("click", ()=>{
+            let from = document.getElementById("fromDateTime");
+            let to = document.getElementById("toDateTime");
+            // console.log(new Date(from.value)+" new Date(from.value)");
+            // console.log(new Date(to.value)+" new Date(to.value)");
+            this.GRAPH.update_from_to(
+                this.AUTH.getCurrentDate(new Date(from.value)), 
+                this.AUTH.getCurrentDate(new Date(to.value))
+                );
+            this.GRAPH.update_display_graph(this.GRAPH.CLASS_NAME);
+        });
+    }
     initGraph(){
-        const graph = new Graph(this.AUTH, this.ID);
-        graph.run_display_graph(1000);
+        this.GRAPH = new Graph(this.AUTH, this.ID, 
+                            this.AUTH.getSubtractDates(new Date, [0, 0, 0, 0, 0, 10]),
+                            this.AUTH.getCurrentDate(new Date)
+                            );
+        this.GRAPH.update_display_graph(this.GRAPH.CLASS_NAME);
+        this.initConfirmButton();
+        // this.GRAPH.run_display_graph(1000);
     }
 
     clearFirstBlockByClass(className){
@@ -36,7 +54,6 @@ export default class Item {
         button_graph.classList.add("nav_button");
         let button_graph_link = document.createElement("a")
         button_graph_link.addEventListener("click",()=>{
-
             let className = "main-content";
             this.clearFirstBlockByClass(className);
             let block = document.createElement("div")
