@@ -299,3 +299,18 @@ img {
   .date_input{
     width: 150px;
   }
+  .ct-point{
+
+    stroke-width: 2px;
+  }
+  .ct-line {
+    stroke-width: 3px;
+}
+  .ct-label {
+    stroke-width: 2px;
+}
+
+.header_graph_block__title{
+  margin: 25px;
+  font-size: 25px;
+}

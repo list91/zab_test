@@ -26,11 +26,12 @@ export default class Item {
     }
     initGraph(){
         this.GRAPH = new Graph(this.AUTH, this.ID, 
-                            this.AUTH.getSubtractDates(new Date, [0, 0, 0, 0, 0, 10]),
+                            this.AUTH.getSubtractDates(new Date, [0, 0, 0, 0, 1, 0]),
                             this.AUTH.getCurrentDate(new Date)
                             );
         this.GRAPH.update_display_graph(this.GRAPH.CLASS_NAME);
         this.initConfirmButton();
+        document.getElementsByClassName("header_graph_block__title")[0].textContent = this.NAME;
         // this.GRAPH.run_display_graph(1000);
     }
 
@@ -79,21 +80,6 @@ export default class Item {
             let className = "main-content";
             this.clearFirstBlockByClass(className);
             new Table(this.AUTH, this)
-            //     console.log(this.AUTH.getItemsTypeTimeInterval(
-        //         this.ID,
-        //         this.AUTH.getSubtractDates(new Date, [0, 0, 0, 1, 0, 0]),
-        //         this.AUTH.getCurrentDate(new Date),
-        //         this.TYPE
-        // ));
-            // let className = "main-content";
-            // this.clearFirstBlockByClass(className);
-            // let block = document.createElement("div")
-            // block.id = "graphs";
-            // document.getElementsByClassName(className)[0].appendChild(block);
-            // let blockGraph = document.createElement("div")
-            // blockGraph.id = "graph_container";
-            // document.getElementsByClassName(className)[0].appendChild(blockGraph);
-            // this.initGraph();
         });
 
 
@@ -102,10 +88,7 @@ export default class Item {
         
         if(this.TYPE == "0"){
             buttons_block.appendChild(button_graph);
-        } else{
-            // console.log(this.NAME+" - "+this.TYPE);
         }
-        
         buttons_block.appendChild(button_table);
 
         this.LI_BLOCK.appendChild(title);        

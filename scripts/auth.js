@@ -36,6 +36,26 @@ export default class Auth {
           throw new Error(`HTTP error! Status: ${this.request.status}`);
         }
       }
+      processTableData(tableData) {
+        if (!tableData || tableData.length === 0) {
+          return [];
+        }
+
+        const intermediatePointsCount = 25;
+
+        const dataPointsCount = tableData.length;
+
+        const step = Math.floor(dataPointsCount / (intermediatePointsCount + 1));
+
+        const intermediatePoints = [];
+
+        for (let i = 1; i <= intermediatePointsCount; i++) {
+          const index = i * step - 1;
+          intermediatePoints.push(tableData[index]);
+        }
+
+        return intermediatePoints;
+      }
 
       getCurrentDate(date) {
         const currentDate = date || new Date();
