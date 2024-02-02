@@ -38,6 +38,10 @@ export default class DataInterface {
 
         return intermediatePoints;
       }
+    async update_from_to(from, to){
+      this.from = from;
+      this.to = to;
+    }
       
       convertTimestampToReadableDate(timestamp) {
         const date = new Date(timestamp * 1000); // Умножаем на 1000, так как JavaScript ожидает миллисекунды
@@ -113,10 +117,35 @@ export default class DataInterface {
 
         let button_run = document.createElement("button");
         button_run.id = "submit";
+        button_run.classList.add("layout");
+        button_run.classList.add("layout_confirm");
         button_run.setAttribute("type", "button");
         button_run.textContent = "Подтвердить"
 
+        let button_auto_update_box = document.createElement("div");
+        button_auto_update_box.classList.add("button_auto_update_box");
+
+        let button_auto_update = document.createElement("button");
+        button_auto_update.id = "submit";
+        button_auto_update.classList.add("layout");
+        button_auto_update.classList.add("layout_confirm");
+        button_auto_update.setAttribute("type", "button");
+        button_auto_update.textContent = "Автообновление"
+        
+        let button_auto_update_check = document.createElement("input");
+        button_auto_update_check.id = "myCheckbox";
+        button_auto_update_check.setAttribute("type", "checkbox");
+        
+        let button_auto_update_check_container = document.createElement("div");
+        button_auto_update_check_container.classList.add("checkbox-container");
+
         this.PARAMS_FORM.appendChild(date);        
-        this.PARAMS_FORM.appendChild(button_run);        
+        
+        this.PARAMS_FORM.appendChild(button_auto_update_box);        
+        
+        button_auto_update_box.appendChild(button_run);        
+        // button_auto_update_box.appendChild(button_auto_update);        
+        // button_auto_update_box.appendChild(button_auto_update_check_container);        
+        button_auto_update_check_container.appendChild(button_auto_update_check);        
       }
 }

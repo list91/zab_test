@@ -23,25 +23,37 @@ export default class Auth {
       this.authenticateAndGetAPI(this.URL, this.LOGIN, this.PASSWORD)
       }
       getData(url, data) {
-        this.request.open('POST', url, false); // false указывает на синхронный режим
-        this.request.setRequestHeader('Content-Type', 'application/json');
-        this.request.send(JSON.stringify(data));
-        // console.log(this.request);
-        // console.log(this.request.responseText);
-      
-        if (this.request.status === 200) {
-          // alert(this.request.responseText);
-          return JSON.parse(this.request.responseText);
-        } else {
-          throw new Error(`HTTP error! Status: ${this.request.status}`);
-        }
-      }
+        return new Promise((resolve, reject) => {
+            this.request.open('POST', url, true);
+            this.request.setRequestHeader('Content-Type', 'application/json');
+    
+            this.request.onload = () => {
+                console.log(1);
+                if (this.request.status === 200) {
+                    const responseData = JSON.parse(this.request.responseText);
+                    resolve(responseData);
+                } else {
+                    console.log(1);
+                    reject(`HTTP error! Status: ${this.request.status}`);
+                }
+            };
+    
+            this.request.onerror = () => {
+                console.log(1);
+                reject("Network error");
+            };
+    
+            this.request.send(JSON.stringify(data));
+        });
+    }
+    
+
       processTableData(tableData) {
         if (!tableData || tableData.length === 0) {
           return [];
         }
 
-        const intermediatePointsCount = 25;
+        const intermediatePointsCount = 5;
 
         const dataPointsCount = tableData.length;
 
@@ -84,16 +96,14 @@ export default class Auth {
     }
         
     getStringFormatDate(list){
-      console.log(list);
       return list[2] + '-'+list[1]+'-'+list[0]+'T'+list[3]+':'+list[4]+':'+list[5]+'Z';
     }
-      getItemsTimeInterval(id, timeFrom, timeTill) {
-        // console.log(timeFrom);
-        // console.log(timeTill);
+      async getItemsTimeInterval(id, timeFrom, timeTill) {
         const startDate = new Date(this.getStringFormatDate(timeFrom));
         const endDate = new Date(this.getStringFormatDate(timeTill));
         const timeFromFormat = Math.floor(startDate.getTime() / 1000);
         const timeTillFormat = Math.floor(endDate.getTime() / 1000);        
+        // alert(id);
         const requestData = {
           jsonrpc: '2.0',
           method: "history.get",
@@ -109,19 +119,20 @@ export default class Auth {
           id: 1,
         };
         try {
-          const zabbixData = this.getData('http://192.168.0.160/zabbix/api_jsonrpc.php', requestData);
+          const zabbixData = await this.getData('http://192.168.0.160/zabbix/api_jsonrpc.php', requestData);
           if (zabbixData.result && zabbixData.result.length > 0) {
             return zabbixData.result;
           } else {
             console.log('No data found.');
+            return {};
+            
           }
         } catch (error) {
           console.error('Error:', error.message);
         }
       }
-      getItemsTypeTimeInterval(id, timeFrom, timeTill, type) {
-        console.log(timeFrom);
-        console.log(timeTill);
+      async getItemsTypeTimeInterval(id, timeFrom, timeTill, type) {
+        // console.log(timeFrom); TODO перейти на него для граф и табл
         const startDate = new Date(timeFrom[2] + '-'+timeFrom[1]+'-'+timeFrom[0]+'T'+timeFrom[3]+':'+timeFrom[4]+':'+timeFrom[5]+'Z');
         const endDate = new Date(timeTill[2] + '-'+timeTill[1]+'-'+timeTill[0]+'T'+timeTill[3]+':'+timeTill[4]+':'+timeTill[5]+'Z');
         const timeFromFormat = Math.floor(startDate.getTime() / 1000);
@@ -142,11 +153,13 @@ export default class Auth {
         };
         // console.log(requestData);
         try {
-          const zabbixData = this.getData('http://192.168.0.160/zabbix/api_jsonrpc.php', requestData);
+          // alert(1);
+          const zabbixData = await this.getData('http://192.168.0.160/zabbix/api_jsonrpc.php', requestData);
           if (zabbixData.result && zabbixData.result.length > 0) {
             return zabbixData.result;
           } else {
             console.log('No data found.');
+            return {};
           }
         } catch (error) {
           console.error('Error:', error.message);
@@ -184,7 +197,7 @@ export default class Auth {
         }
       }
 
-      getAllItems(itemids) {
+      async getAllItems(itemids) {
         const requestData = {
           jsonrpc: '2.0',
           method: "history.get",
@@ -199,7 +212,7 @@ export default class Auth {
         };
       
         try {
-          const zabbixData = this.getData(this.URL, requestData);
+          const zabbixData = await this.getData(this.URL, requestData);
           // console.log(zabbixData);
           if (zabbixData.result && zabbixData.result.length > 0) {
             // console.log(zabbixData);
@@ -211,9 +224,25 @@ export default class Auth {
           console.error('Error:', error.message);
         }
       }
+      spin_yes(){
+        document.getElementById("spinnerContainer").classList.remove("hidden")
+      }
+      spin_no(){
+        document.getElementById("spinnerContainer").classList.add("hidden")
+      }
       
+      create_spin(){
+        this.SPIN = document.createElement("div");
+        this.SPIN.id = "spinnerContainer";
+        this.SPIN.classList.add("spinner-container");
+
+        let spin = document.createElement("div");
+        spin.classList.add("spinner");
+        this.SPIN.appendChild(spin);
+      }
+
     
-    getItemsByHostName(name) {
+      async getItemsByHostName(name) {
     // Формируем данные запроса
     const requestData = {
         jsonrpc: '2.0',
@@ -227,12 +256,14 @@ export default class Auth {
         auth: this.API,
         id: 1
     };
-    // console.log(this.getData(this.URL, requestData));
-    const data = this.getData(this.URL, requestData);
+    console.log(0);
+    const data = await this.getData(this.URL, requestData);
+    console.log("000");
+    // console.log(data);
     return this.getItemsByHostId(data.result[0].hostid)
     
 }
-getItemsByHostId(hostId) {
+async getItemsByHostId(hostId) {
   // Формируем данные запроса для получения элементов (items)
   const requestData = {
       jsonrpc: '2.0',
@@ -245,7 +276,7 @@ getItemsByHostId(hostId) {
       id: 1
   };
   // console.log(requestData);
-  const data = this.getData(this.URL, requestData);
+  const data = await this.getData(this.URL, requestData);
   // console.log(data);
   return data.result;
 }

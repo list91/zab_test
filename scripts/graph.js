@@ -1,9 +1,10 @@
 import DataInterface from "./data_interface.js";
 export default class Graph extends DataInterface {
-    constructor(auth, item, from, to){
+    constructor(auth, item, from, to, name){
         super(auth, item);
-        this.ID_ITEM = item.ID;
-        this.update_from_to(from, to)
+        this.ID_ITEM = item;
+        this.name = name;
+        this.update_from_to(from, to);
         this.create_graph_block();
     }
     create_graph_block(){
@@ -17,8 +18,9 @@ export default class Graph extends DataInterface {
             }
         }
 
-        const graph = document.createElement("div");
+        const graph = document.createElement("canvas");
         graph.classList.add(this.CLASS_NAME);
+        graph.id = "graphChar";
         
         graph.classList.add("graph");
 
@@ -90,150 +92,134 @@ export default class Graph extends DataInterface {
     cancel_runprocess(){
         clearInterval(this.UPDATE_TASK_ID);
     }
-    run_display_graph(interval){
-        this.UPDATE_TASK_ID = setInterval(
-            ()=>{
-                this.update_display_graph(this.CLASS_NAME)
-            },
-            interval
-        );
+    run_display_graph(interval, from){
+        this.UPDATE_TASK_ID = setInterval(async () => {
+            console.log(from);
+            console.log(this.AUTH.getCurrentDate(new Date()));
+            
+            await this.update_from_to(
+                this.AUTH.getCurrentDate(new Date(from)),
+                this.AUTH.getCurrentDate(new Date())
+            );
+
+            this.update_display_graph();
+        }, interval);
+        
     }
-    update_from_to(from, to){
-        this.from = from;
-        this.to = to;
+    
+
+
+    async udate_array(){
+        // alert(this.ID_ITEM);
+         this.ARRAY_LONG = await this.AUTH.getItemsTimeInterval(this.ID_ITEM, this.from, this.to);
     }
 
+    async update_display_graph(){
 
-    udate_array(){
-        this.ARRAY_LONG = this.AUTH.getItemsTimeInterval(this.ID_ITEM, this.from, this.to);
-    }
+        let spinCheck = document.getElementsByClassName("spinner-container");
+        if (spinCheck.length == 0){
+            this.AUTH.create_spin();
+            this.MAIN_CONTAINER.appendChild(this.AUTH.SPIN);
+        } else {
+            // тут я включаю спиннер
+            this.AUTH.spin_yes();
+        }
 
-    update_display_graph(){
+        await this.udate_array();
+        let max_x = 0;
+        let max_y = 0;
+        
+        let start_x = 0;
 
-        this.udate_array();
-
-        var series_list = []
-        var labels_list = []
-
-        // console.log(this.ARRAY_LONG);
 
         if (this.ARRAY_LONG) {
-            console.log(this.ARRAY_LONG);
-            for (let index = 0; index < this.ARRAY_LONG.length; index++) {
-                series_list.push(this.ARRAY_LONG[index]["value"]);
-                labels_list.push(new Date(this.ARRAY_LONG[index]["clock"]*1000).toISOString());
-                // console.log(new Date(this.ARRAY_LONG[index]["clock"]*1000).toISOString());
+            const dataPoints = [];
+            if (this.ARRAY_LONG.length){
+
+                start_x = this.ARRAY_LONG[0]["clock"];
+                // console.log(this.ARRAY_LONG);
+                
+                
+                for (let index = 0; index < this.ARRAY_LONG.length; index++) {
+                    let point = {};
+                    let dateInSeconds = this.ARRAY_LONG[index]["clock"];
+                    let dateInMilliseconds = dateInSeconds * 1000;
+                    
+                    point["x"] = dateInMilliseconds;
+                    point["y"] = this.ARRAY_LONG[index]["value"];
+                    
+                    if (parseInt(dateInMilliseconds) > parseInt(max_x)) {
+                        max_x = dateInMilliseconds;
+                    }
+                    if (parseFloat(point["y"]) > parseFloat(max_y)) {
+                        max_y = point["y"];
+                    }
+                    
+                    dataPoints.push(point);
+                }
+                
+                dataPoints.sort((a, b) => a.x - b.x);
             }
+        
+            const data = {
+                datasets: [
+                    {
+                        label: this.name,
+                        data: dataPoints,
+                        borderColor: 'red',
+                        backgroundColor: 'rgba(255, 0, 0, 0.5)',
+                    }
+                ]
+            };
+        
+
+            // тут убираю отображение спиннера
+            this.AUTH.spin_no();
+
+            this.GRAPH_DIV.innerHTML = "";
+            const graph = document.createElement("canvas");
+            graph.classList.add(this.CLASS_NAME);
+            graph.id = "graphChar";
+            graph.classList.add("graph");
+            this.GRAPH_DIV.appendChild(graph);
+        
+            const ctx = document.getElementById("graphChar");
+            // alert(max_y);
+            // alert(max_x);
+            new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    hover: {mode: null},
+                    events: [],
+                    animation: {
+                        // Отключение анимаций
+                        duration: 0
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            stepSize: 50,
+                            max: max_y
+                        },
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            min: this.from,
+                            max: this.to,
+                            ticks: {
+                                callback: function (value, index, values) {
+                                    let date = new Date(value);
+                                    return `${('0' + date.getDate()).slice(-2)}.${('0' + (date.getMonth() + 1)).slice(-2)}.${date.getFullYear()} ${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}:${('0' + date.getSeconds()).slice(-2)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
-
-        var data = {
-            labels: this.AUTH.processTableData(labels_list),
-            series: [this.AUTH.processTableData(series_list)]
-        }
-        // console.log(data)
-        var defaultOptions = {
-            // Options for X-Axis
-            axisX: {
-              // The offset of the labels to the chart area
-              offset: 80,
-              // Position where labels are placed. Can be set to `start` or `end` where `start` is equivalent to left or top on vertical axis and `end` is equivalent to right or bottom on horizontal axis.
-              position: 'end',
-              // Allows you to correct label positioning on this axis by positive or negative x and y offset.
-              labelOffset: {
-                x: 10,
-                y: 0
-              },
-              // If labels should be shown or not
-              showLabel: true,
-              // If the axis grid should be drawn or not
-              showGrid: true,
-              // Interpolation function that allows you to intercept the value from the axis label
-              labelInterpolationFnc: Chartist.noop,
-              // Set the axis type to be used to project values on this axis. If not defined, Chartist.StepAxis will be used for the X-Axis, where the ticks option will be set to the labels in the data and the stretch option will be set to the global fullWidth option. This type can be changed to any axis constructor available (e.g. Chartist.FixedScaleAxis), where all axis options should be present here.
-              type: undefined
-            },
-            // Options for Y-Axis
-            axisY: {
-              // The offset of the labels to the chart area
-              offset: 80,
-              // Position where labels are placed. Can be set to `start` or `end` where `start` is equivalent to left or top on vertical axis and `end` is equivalent to right or bottom on horizontal axis.
-              position: 'start',
-              // Allows you to correct label positioning on this axis by positive or negative x and y offset.
-              labelOffset: {
-                x: 0,
-                y: 10
-              },
-              // If labels should be shown or not
-              showLabel: true,
-              // If the axis grid should be drawn or not
-              showGrid: true,
-              // Interpolation function that allows you to intercept the value from the axis label
-              labelInterpolationFnc: Chartist.noop,
-              // Set the axis type to be used to project values on this axis. If not defined, Chartist.AutoScaleAxis will be used for the Y-Axis, where the high and low options will be set to the global high and low options. This type can be changed to any axis constructor available (e.g. Chartist.FixedScaleAxis), where all axis options should be present here.
-              type: undefined,
-              // This value specifies the minimum height in pixel of the scale steps
-              scaleMinSpace: 20,
-              // Use only integer values (whole numbers) for the scale steps
-              onlyInteger: false
-            },
-            // Specify a fixed width for the chart as a string (i.e. '100px' or '50%')
-            width: undefined,
-            // Specify a fixed height for the chart as a string (i.e. '100px' or '50%')
-            height: undefined,
-            // If the line should be drawn or not
-            showLine: true,
-            // If dots should be drawn or not
-            showPoint: true,
-            // If the line chart should draw an area
-            showArea: false,
-            // The base for the area chart that will be used to close the area shape (is normally 0)
-            areaBase: 0,
-            // Specify if the lines should be smoothed. This value can be true or false where true will result in smoothing using the default smoothing interpolation function Chartist.Interpolation.cardinal and false results in Chartist.Interpolation.none. You can also choose other smoothing / interpolation functions available in the Chartist.Interpolation module, or write your own interpolation function. Check the examples for a brief description.
-            lineSmooth: false,
-            // If the line chart should add a background fill to the .ct-grids group.
-            showGridBackground: false,
-            // Overriding the natural low of the chart allows you to zoom in or limit the charts lowest displayed value
-            low: undefined,
-            // Overriding the natural high of the chart allows you to zoom in or limit the charts highest displayed value
-            high: undefined,
-            // Padding of the chart drawing area to the container element and labels as a number or padding object {top: 5, right: 5, bottom: 5, left: 5}
-            chartPadding: {
-              top: 15,
-              right: 15,
-              bottom: 5,
-              left: 10
-            },
-            // When set to true, the last grid line on the x-axis is not drawn and the chart elements will expand to the full available width of the chart. For the last label to be drawn correctly you might need to add chart padding or offset the last label with a draw event handler.
-            fullWidth: false,
-            // If true the whole data is reversed including labels, the series order as well as the whole series data arrays.
-            reverseData: false,
-            // Override the class names that get used to generate the SVG structure of the chart
-            classNames: {
-              chart: 'ct-chart-line',
-              label: 'ct-label',
-              labelGroup: 'ct-labels',
-              series: 'ct-series',
-              line: 'ct-line',
-              point: 'ct-point',
-              area: 'ct-area',
-              grid: 'ct-grid',
-              gridGroup: 'ct-grids',
-              gridBackground: 'ct-grid-background',
-              vertical: 'ct-vertical',
-              horizontal: 'ct-horizontal',
-              start: 'ct-start',
-              end: 'ct-end'
-            }
-          };
-//           var options = {
-//   lineSmooth: Chartist.Interpolation.cardinal({
-//     tension: 0.1
-//   })
-// };
-
-        // document.getElementsByClassName("header_graph_block__title")[0].textContent =
-
-        new Chartist.Line("."+this.CLASS_NAME, data, defaultOptions);
+        
     }
 
 }

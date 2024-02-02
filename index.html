@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
-  <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+    <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Docuent</title>
@@ -10,42 +10,61 @@
     
 </head>
 <body>
-    
+    <!-- <div class="header_menu_fix">uifuiuierht</div> -->
     <div class="container">
-        <div class="nav_container">
-            <div class="logo_container">
-                <img src="img/logo.png" alt="">
+        <div class="mobil_container_head">
+            <div class="logo_burg">
+                
+                <div class="header_mobile_container">
+                    <div class="header_mobile"><img src="img/logo.png" alt=""></div>
+                </div>
+                <div class="burger_container">
+                    <div class="burger">
+                        <div class="container nav-container">
+                            <input class="checkbox" type="checkbox" name="" id="" />
+                            <div class="hamburger-lines">
+                              <span class="line line1"></span>
+                              <span class="line line2"></span>
+                              <span class="line line3"></span>
+                            </div>  
+                        </div>
+                    </div>
+                </div>
+            
             </div>
-            <nav>
+            <div class="nav_container">
+                <div class="logo_container">
+                    <img src="img/logo.png" alt="">
+                </div>
+                <nav class="nav_button_container">
 
-              <div class="nav_button close_btn">
-                <a class="button_a" href="#">графики</a>
-            </div>
+                    <div class="nav_button close_btn nav_button_head">
+                        <a class="button_a" href="#">графики</a>
+                    </div>
 
-              <div class="nav_button close_btn">
-                <a class="button_a" href="#">оповещения</a>
-            </div>
-              
-            <div class="nav_button close_btn">
-                <a class="button_a" href="#">журнал аварий</a>
-            </div>
+                    <div class="nav_button close_btn nav_button_head">
+                        <a class="button_a" href="#">оповещения</a>
+                    </div>
+                    
+                    <div class="nav_button close_btn nav_button_head">
+                        <a class="button_a" href="#">журнал аварий</a>
+                    </div>
 
-              <div class="nav_button close_btn">
-                <a class="button_a" href="#">отчет</a>
-            </div>
+                    <div class="nav_button close_btn nav_button_head">
+                        <a class="button_a" href="#">отчет</a>
+                    </div>
 
-            </nav>
-            <div class="nav_settings">
-                <div class="nav_button close_btn">
-                    <a class="button_a" href="#">настройки</a>
+                </nav>
+                <div class="nav_settings nav_button_container">
+                    <div class="nav_button close_btn nav_button_head">
+                        <a class="button_a" href="#">настройки</a>
+                    </div>
                 </div>
             </div>
         </div>
-    
         <div class="header_and_maincontent_container">
             
             <header>
-                <!-- <h1>Your Website</h1> -->
                 <div class="header_info">
                     <div class="nav_button">
                         <div class="button_a info_descr" ><div class="descr_title">объект:</div>
@@ -64,7 +83,7 @@
                     <nav>
                         
                         <div class="nav_button">
-                            <a class="button_a" href="#">выбрать нагрузку</a>
+                            <a class="button_a qqq" href="#">выбрать нагрузку</a>
                         </div>
                         
                         <div class="nav_button close_btn">
@@ -80,35 +99,12 @@
                 </div>
               </header>
             
-            
-              <div class="main-content">
-                    <!-- <form>
-                        <div class="date">
-                            <div class="inputs">
-
-                                <p>
-                                    <label for="fromDateTime">От: </label>
-                                    <input type="datetime-local" class="datetime_input" id="fromDateTime"/>
-                                </p>
-                                <p>
-                                    <label for="toDateTime">До: </label>
-                                    <input type="datetime-local" class="datetime_input" id="toDateTime"/>
-                                </p>
-                                
-                            </div>
-                            <div class="date_layout">
-                            
-                            </div>
-                        </div>
-                            <p>
-                                <button type="submit">Подтвердить</button>
-                            </p>
-                    </form> -->
-
-                <!-- <div id="graphs"> -->
-                    <!-- <ul class="zebra_list"></ul>              -->
-                <!-- </div> -->
-              </div>
+              <div class="main-content"><!-- тут хранится график -->
+                <!-- <div class="checkbox-container">
+                    <input type="checkbox" id="myCheckbox">
+                </div> -->
+                <!-- <label class="checkbox-label" for="myCheckbox">Мой чекбокс</label> -->
+                </div>
         </div>
     </div>
 
@@ -116,7 +112,8 @@
       <!-- <footer>
         <p>&copy; 2024 Your Website. All rights reserved.</p>
       </footer> -->
-      <script type="module" src="node_modules/chartist/dist/index.js"></script>
+<!-- <script type="module" src="node_modules/chartist/dist/index.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="module" src="scripts/script.js"></script>
 <script type="module" src="index.js"></script>
 </body>

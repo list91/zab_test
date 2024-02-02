@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spinner Animation</title>
+  <style>
+    /* Стили для спиннера */
+    .spinner-container {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 50px auto;
+    }
+
+    .spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    /* Анимация вращения */
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Скрытие спиннера */
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="spinner-container" id="spinnerContainer">
+  <div class="spinner"></div>
+</div>
+
+<div id="content" class="hidden">
+  <!-- Содержимое блока -->
+  <h1>Your Content Here</h1>
+  <p>This is the content that was hidden under the spinner.</p>
+</div>
+
+<script>
+  // JavaScript для задержки и скрытия спиннера
+  document.addEventListener("DOMContentLoaded", function() {
+    setTimeout(function() {
+      // Спрятать спиннер
+      document.getElementById("spinnerContainer").classList.add("hidden");
+      // Показать содержимое
+      document.getElementById("content").classList.remove("hidden");
+    }, 5000); // Задержка в 5 секунд
+  });
+</script>
+
+</body>
+</html>
