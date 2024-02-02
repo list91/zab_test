@@ -49,6 +49,9 @@ export default class DataInterface {
       await new Promise(resolve => setTimeout(resolve, 3000)); // Пример задержки в 3 секунды
       console.log('Асинхронный метод завершен');
   }
+  cancel_runprocess(){
+    clearInterval(this.UPDATE_TASK_ID);
+}
 
     //
     async run_display_graph(interval, range) {

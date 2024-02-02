@@ -19,6 +19,7 @@ export default class Item {
             // console.log(new Date(from.value)+" new Date(from.value)");
             // console.log(new Date(to.value)+" new Date(to.value)");
             // this.GRAPH.cancel_runprocess();
+            this.GRAPH.cancel_runprocess();
             this.GRAPH.update_from_to(
                 this.AUTH.getCurrentDate(new Date(from.value)), 
                 this.AUTH.getCurrentDate(new Date())
