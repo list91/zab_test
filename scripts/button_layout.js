@@ -31,7 +31,10 @@ export default class ButtonLayout {
             // document.getElementById('fromDateTime').value = startDate.toISOString().slice(0, 16);
             // document.getElementById('toDateTime').value = endDate.toISOString().slice(0, 16);
 
-            this.INTERFACE.run_display_graph(500, this.RANGE);
+            // this.INTERFACE.delayedTask().then(message => {
+            //     console.log(1999999);
+            // });
+            this.INTERFACE.run_display_graph(50, this.RANGE);
             this.BUTTON.classList.add("active");
         });
     }

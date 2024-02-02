@@ -44,30 +44,68 @@ export default class DataInterface {
       this.to = to;
     }
 
+    async longAsyncProcess() {
+      // Асинхронный метод, который выполняется долго
+      await new Promise(resolve => setTimeout(resolve, 3000)); // Пример задержки в 3 секунды
+      console.log('Асинхронный метод завершен');
+  }
+
     //
-    run_display_graph(interval, range) {
-      
-      //если поток запущен то прервать его
+    async run_display_graph(interval, range) {
+      // Если поток запущен, прервать его
       if (this.UPDATE_TASK_ID) {
           this.cancel_runprocess();
       }
   
-      const runIteration = () => {
-          let dateNow = new Date();
-          let from = this.AUTH.getSubtractDates(dateNow, range);
-          console.log(from);
-          this.update_from_to(
-              from,
-              this.AUTH.getCurrentDate(dateNow)
-          );
+      let running = false; // Флаг для отслеживания выполнения асинхронного метода
   
-          this.update_display_graph().then(() => {
-              setTimeout(runIteration, interval);
-          });
-      };
+      this.UPDATE_TASK_ID = setInterval(async () => {
+          if (!running) {
+              running = true;
   
-      this.UPDATE_TASK_ID = setTimeout(runIteration, 0); // Начинаем первую итерацию без задержки
+              let dateNow = new Date();
+              let from = this.AUTH.getSubtractDates(dateNow, range);
+  
+              this.update_from_to(
+                  from,
+                  this.AUTH.getCurrentDate(dateNow)
+              );
+  
+              await this.update_display_graph();
+              
+              running = false; // После завершения выполнения снимаем флаг выполнения
+          }
+      }, interval);
   }
+  
+  // async udate_array() {
+  //     // alert(this.ID_ITEM);
+  //     this.ARRAY_LONG = await this.AUTH.getItemsTimeInterval(this.ID_ITEM, this.from, this.to);
+  // }
+  //   //
+  //   run_display_graph(interval, range) {
+      
+  //     //если поток запущен то прервать его
+  //     if (this.UPDATE_TASK_ID) {
+  //         this.cancel_runprocess();
+  //     }
+  
+  //     const runIteration = () => {
+  //         let dateNow = new Date();
+  //         let from = this.AUTH.getSubtractDates(dateNow, range);
+  //         console.log(from);
+  //         this.update_from_to(
+  //             from,
+  //             this.AUTH.getCurrentDate(dateNow)
+  //         );
+  
+  //         this.update_display_graph().then(() => {
+  //             setTimeout(runIteration, interval);
+  //         });
+  //     };
+  
+  //     this.UPDATE_TASK_ID = setTimeout(runIteration, 0); // Начинаем первую итерацию без задержки
+  // }
   async udate_array(){
     // alert(this.ID_ITEM);
      this.ARRAY_LONG = await this.AUTH.getItemsTimeInterval(this.ID_ITEM, this.from, this.to);
@@ -136,13 +174,14 @@ export default class DataInterface {
         // тут убираю отображение спиннера
         this.AUTH.spin_no();
 
-        this.GRAPH_DIV.innerHTML = "";
-        const graph = document.createElement("canvas");
-        graph.classList.add(this.CLASS_NAME);
-        graph.id = "graphChar";
-        graph.classList.add("graph");
-        this.GRAPH_DIV.appendChild(graph);
-    
+        // this.GRAPH_DIV.innerHTML = "";
+        // const graph = document.createElement("canvas");
+        // graph.classList.add(this.CLASS_NAME);
+        // graph.id = "graphChar";
+        // graph.classList.add("graph");
+        // this.GRAPH_DIV.appendChild(graph);
+        this.update_div_graph()
+        console.log(44);
         const ctx = document.getElementById("graphChar");
         // alert(max_y);
         // alert(max_x);
@@ -180,7 +219,15 @@ export default class DataInterface {
         });
     }
     
-}
+ }
+      async update_div_graph(){
+          this.GRAPH_DIV.innerHTML = "";
+          const graph = document.createElement("canvas");
+          graph.classList.add(this.CLASS_NAME);
+          graph.id = "graphChar";
+          graph.classList.add("graph");
+          this.GRAPH_DIV.appendChild(graph);
+      }
       
       convertTimestampToReadableDate(timestamp) {
         const date = new Date(timestamp * 1000); // Умножаем на 1000, так как JavaScript ожидает миллисекунды
