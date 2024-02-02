@@ -43,23 +43,30 @@ export default class DataInterface {
       this.from = from;
       this.to = to;
     }
-    run_display_graph(interval, from){
-      if(this.UPDATE_TASK_ID){
-          alert(1);
+
+    //
+    run_display_graph(interval, range) {
+      
+      //если поток запущен то прервать его
+      if (this.UPDATE_TASK_ID) {
           this.cancel_runprocess();
       }
-      this.UPDATE_TASK_ID = setInterval(async () => {
+  
+      const runIteration = () => {
+          let dateNow = new Date();
+          let from = this.AUTH.getSubtractDates(dateNow, range);
           console.log(from);
-          // console.log(this.AUTH.getCurrentDate(new Date()));
-
-          await this.update_from_to(
+          this.update_from_to(
               from,
-              this.AUTH.getCurrentDate(new Date())
+              this.AUTH.getCurrentDate(dateNow)
           );
-
-          this.update_display_graph();
-      }, interval);
-      
+  
+          this.update_display_graph().then(() => {
+              setTimeout(runIteration, interval);
+          });
+      };
+  
+      this.UPDATE_TASK_ID = setTimeout(runIteration, 0); // Начинаем первую итерацию без задержки
   }
   async udate_array(){
     // alert(this.ID_ITEM);
@@ -75,8 +82,9 @@ export default class DataInterface {
         // тут я включаю спиннер
         this.AUTH.spin_yes();
     }
-
+    console.log("await this.udate_array(); START")
     await this.udate_array();
+    console.log("await this.udate_array(); END")
     let max_x = 0;
     let max_y = 0;
     
@@ -108,6 +116,7 @@ export default class DataInterface {
                 
                 dataPoints.push(point);
             }
+            max_y = max_y*1.25
             
             dataPoints.sort((a, b) => a.x - b.x);
         }

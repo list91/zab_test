@@ -8,7 +8,9 @@ html {
 * {
   box-sizing: border-box;
 }
-
+.active{
+  background-color: #db2828 !important;
+}
 /* Ваши стили для блока */
 
 
@@ -308,6 +310,7 @@ img {
     margin: 20px 0;
     justify-content: space-around;
   }
+  
   .date_layout{
     display: flex;
     flex-wrap: wrap;

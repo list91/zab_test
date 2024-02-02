@@ -4,6 +4,7 @@ export default class ButtonLayout {
         this.INTERFACE = interfaceClass;
         this.RANGE = range;
         this.AUTH = auth;
+        this.IS_ACTIVE = false;
         this.createButton();
     }
     createButton(){
@@ -12,9 +13,17 @@ export default class ButtonLayout {
         this.BUTTON.setAttribute("type", "button");
         this.BUTTON.textContent = this.TITLE;
         this.BUTTON.addEventListener("click", ()=>{
+            
+            let active_btns = document.getElementsByClassName("active");
+            if(active_btns.length != 0){
+                for (let index = 0; index < active_btns.length; index++) {
+                    active_btns[index].classList.remove("active");
+                }
+            }
 
             let dateNow = new Date();
             let timeFrom = this.AUTH.getSubtractDates(dateNow, this.RANGE);
+            
             // alert(1);
             // const startDate = new Date(this.AUTH.getStringFormatDate(timeFrom));
             // const endDate = new Date(this.AUTH.getStringFormatDate(this.AUTH.getCurrentDate(dateNow)));
@@ -22,7 +31,8 @@ export default class ButtonLayout {
             // document.getElementById('fromDateTime').value = startDate.toISOString().slice(0, 16);
             // document.getElementById('toDateTime').value = endDate.toISOString().slice(0, 16);
 
-            this.INTERFACE.run_display_graph(2000, timeFrom);
+            this.INTERFACE.run_display_graph(500, this.RANGE);
+            this.BUTTON.classList.add("active");
         });
     }
 }
