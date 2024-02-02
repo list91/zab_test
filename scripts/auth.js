@@ -103,7 +103,8 @@ export default class Auth {
         const endDate = new Date(this.getStringFormatDate(timeTill));
         const timeFromFormat = Math.floor(startDate.getTime() / 1000);
         const timeTillFormat = Math.floor(endDate.getTime() / 1000);        
-        // alert(id);
+        console.log(timeFrom);
+        console.log(timeTill);
         const requestData = {
           jsonrpc: '2.0',
           method: "history.get",

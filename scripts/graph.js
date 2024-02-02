@@ -92,134 +92,28 @@ export default class Graph extends DataInterface {
     cancel_runprocess(){
         clearInterval(this.UPDATE_TASK_ID);
     }
-    run_display_graph(interval, from){
-        this.UPDATE_TASK_ID = setInterval(async () => {
-            console.log(from);
-            console.log(this.AUTH.getCurrentDate(new Date()));
+    // run_display_graph(interval, from){
+    //     if(this.UPDATE_TASK_ID){
+    //         this.cancel_runprocess();
+    //     }
+    //     this.UPDATE_TASK_ID = setInterval(async () => {
+    //         console.log(from);
+    //         console.log(this.AUTH.getCurrentDate(new Date()));
             
-            await this.update_from_to(
-                this.AUTH.getCurrentDate(new Date(from)),
-                this.AUTH.getCurrentDate(new Date())
-            );
+    //         await this.update_from_to(
+    //             this.AUTH.getCurrentDate(new Date(from)),
+    //             this.AUTH.getCurrentDate(new Date())
+    //         );
 
-            this.update_display_graph();
-        }, interval);
+    //         this.update_display_graph();
+    //     }, interval);
         
-    }
+    // }
     
 
 
-    async udate_array(){
-        // alert(this.ID_ITEM);
-         this.ARRAY_LONG = await this.AUTH.getItemsTimeInterval(this.ID_ITEM, this.from, this.to);
-    }
+    
 
-    async update_display_graph(){
-
-        let spinCheck = document.getElementsByClassName("spinner-container");
-        if (spinCheck.length == 0){
-            this.AUTH.create_spin();
-            this.MAIN_CONTAINER.appendChild(this.AUTH.SPIN);
-        } else {
-            // тут я включаю спиннер
-            this.AUTH.spin_yes();
-        }
-
-        await this.udate_array();
-        let max_x = 0;
-        let max_y = 0;
-        
-        let start_x = 0;
-
-
-        if (this.ARRAY_LONG) {
-            const dataPoints = [];
-            if (this.ARRAY_LONG.length){
-
-                start_x = this.ARRAY_LONG[0]["clock"];
-                // console.log(this.ARRAY_LONG);
-                
-                
-                for (let index = 0; index < this.ARRAY_LONG.length; index++) {
-                    let point = {};
-                    let dateInSeconds = this.ARRAY_LONG[index]["clock"];
-                    let dateInMilliseconds = dateInSeconds * 1000;
-                    
-                    point["x"] = dateInMilliseconds;
-                    point["y"] = this.ARRAY_LONG[index]["value"];
-                    
-                    if (parseInt(dateInMilliseconds) > parseInt(max_x)) {
-                        max_x = dateInMilliseconds;
-                    }
-                    if (parseFloat(point["y"]) > parseFloat(max_y)) {
-                        max_y = point["y"];
-                    }
-                    
-                    dataPoints.push(point);
-                }
-                
-                dataPoints.sort((a, b) => a.x - b.x);
-            }
-        
-            const data = {
-                datasets: [
-                    {
-                        label: this.name,
-                        data: dataPoints,
-                        borderColor: 'red',
-                        backgroundColor: 'rgba(255, 0, 0, 0.5)',
-                    }
-                ]
-            };
-        
-
-            // тут убираю отображение спиннера
-            this.AUTH.spin_no();
-
-            this.GRAPH_DIV.innerHTML = "";
-            const graph = document.createElement("canvas");
-            graph.classList.add(this.CLASS_NAME);
-            graph.id = "graphChar";
-            graph.classList.add("graph");
-            this.GRAPH_DIV.appendChild(graph);
-        
-            const ctx = document.getElementById("graphChar");
-            // alert(max_y);
-            // alert(max_x);
-            new Chart(ctx, {
-                type: 'line',
-                data: data,
-                options: {
-                    responsive: true,
-                    hover: {mode: null},
-                    events: [],
-                    animation: {
-                        // Отключение анимаций
-                        duration: 0
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            stepSize: 50,
-                            max: max_y
-                        },
-                        x: {
-                            type: 'linear',
-                            position: 'bottom',
-                            min: this.from,
-                            max: this.to,
-                            ticks: {
-                                callback: function (value, index, values) {
-                                    let date = new Date(value);
-                                    return `${('0' + date.getDate()).slice(-2)}.${('0' + (date.getMonth() + 1)).slice(-2)}.${date.getFullYear()} ${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}:${('0' + date.getSeconds()).slice(-2)}`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-        
-    }
+    
 
 }
